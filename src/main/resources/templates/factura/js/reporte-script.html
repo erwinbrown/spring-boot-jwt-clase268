@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<script type="text/javascript" th:fragment="loadreport">
+
+(function(){
+	
+   window.addEventListener("DOMContentLoaded", (e) => {
+	   
+	    const contenedor = document.querySelector(".container");
+	    let numfactura  =  document.querySelector("#facturaid").value;
+        const hijosdelcontenedor = contenedor.children; 
+          
+        
+         hijosdelcontenedor[0].addEventListener("click", (e) => { 
+        	
+        	 hijosdelcontenedor[0].disabled = true;
+        	 
+        	 
+        	 console.log("entre:" + numfactura);
+        	 
+        	 verPdf(numfactura);
+        
+        
+        }) 
+
+  }); 
+	
+    const verPdf = async  (num) => {
+    	
+    	
+         const jreporte = await cargarReporte(num);
+    	
+         if(jreporte[0] == "200") {
+        	 
+        	 
+        	   let titulo = jreporte[1];
+    	       let nreport = jreporte[2];
+    		  
+    		   
+    		   let plantilla =  $("#cardReport").html();
+    		    plantilla = plantilla.replace(/{REPORTNAME}/g, titulo);
+    		    plantilla = plantilla.replace(/{REPORT}/g, nreport);
+    			 
+    			 $("#showreport").append(plantilla);
+    			 
+    			 return false;
+        	 
+        	 
+         } else {
+        	 const errorsec = document.querySelector("#showreport");
+        	
+        	 errorsec.innerHTML = `<span class="badge badge-danger">No se creo el Reporte</span>`;
+        	 
+         }
+         
+         
+         
+	   
+   }
+   
+ const cargarReporte = async (num) => {
+	   
+	 const loadReport = await fetch(`http://localhost:8080/report/loadreport/${num}`);
+     const dataJson = await loadReport.json();
+     
+     return dataJson;
+      
+ }
+	
+})();
+
+</script>
+</body>
+</html>

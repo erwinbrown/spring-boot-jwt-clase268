@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+   <section th:fragment="sectionReport" class="d-none">
+	<div id="cardReport" class="card py-4">
+			<h5 class="card-header">{REPORTNAME}</h5>
+			<div  class="card-body ml-5">
+			 <embed width="90%" height="600" type="application/pdf" th:src="@{'/reportes/' + '{REPORT}'}"/>
+			 </div>
+		</div>	
+	</section>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/section :: encabezado"></head>
+<body>
+	<header th:replace="layout/section :: menu"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+			<h4 class="card-title">
+					<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs"
+								th:href="@{'/factura/form/' + ${cliente.id}}"
+								th:text="'Crear Factura'"></a>
+				</h4>
+
+				<img th:if="${#strings.length(cliente.foto) > 0}"
+					class="img-thumbnail rounded float-left" style="max-width: 25%; max-height:25%"
+					th:src="@{'/archivos/' + ${cliente.foto}}" th:alt="${cliente.foto}" />
+
+				<ul class="list-group">
+					<li class="list-group-item active" th:text="${cliente.nombre}"></li>
+					<li class="list-group-item" th:text="${cliente.apellido}"></li>
+					<li class="list-group-item" th:text="${cliente.email}"></li>
+					<li class="list-group-item" th:text="${#calendars.format(cliente.fechaCreacion, 'dd-MM-yyyy')}"></li>
+				</ul>
+				<table th:if="${#lists.size(cliente.facturas) > 0}" class="table table-bordered table-striped my-4">
+					<thead>
+						<tr>
+							<th>Folio</th>
+							<th>Descripcion</th>
+							<th>Fecha</th>
+							<th>Total</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Ver</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Reporte</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="factura: ${cliente.facturas}">
+							<th th:text="${factura.id}"></th>
+							<td th:text="${factura.descripcion}"></td>
+							<td th:text="${#calendars.format(factura.creatAt, 'dd-MM-yyyy')}"></td>
+							<td th:text="${#numbers.formatDecimal(factura.total, 0, 'COMMA', 2, 'POINT')}"></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-primary btn-sm" th:href="@{'/factura/verfact/' + ${factura.id}}" th:text="'detalle'"></a></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-primary btn-sm" th:href="@{'/report/view/' + ${factura.id}}" th:text="'Reporte'"></a></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-danger btn-sm" th:href="@{'/factura/eliminar/' + ${factura.id}}" th:text="'Borrar'"></a></td>
+						</tr>
+					</tbody>
+				</table>
+           
+			</div>
+		</div>
+        	<div th:if="${#lists.isEmpty(cliente.facturas)}" class="alert alert-info my-4" th:text="'No tiene factura asignada para el cliente: ' + ${cliente.nombre} + ' ' + ${cliente.apellido}"></div>
+	</div>
+	<footer th:replace="layout/section :: piedepagina"></footer>
+</body>
+</html>

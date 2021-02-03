@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/section :: encabezado"></head>
+
+<body>
+	<header th:replace="layout/section :: menu"></header>
+
+	<div class="container py-4">
+    
+		<button type="button" class="btn btn-primary">Cargar Reporte de Factura</button>
+		
+		<input type="hidden" id="facturaid" th:value="${idfactura}">
+
+		<section th:replace="layout/reportPlantilla :: sectionReport"></section>
+		
+		<section id="showreport"></section>
+		
+	</div>
+
+	<footer th:replace="layout/section :: piedepagina"></footer>
+	<script th:replace="factura/js/reporte-script :: loadreport"></script>
+
+</body>
+</html>
